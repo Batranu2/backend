@@ -56,7 +56,6 @@ public class GenericRepo {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<T> list = new ArrayList<>();
                 for (DataSnapshot messageSnapshot : dataSnapshot.getChildren()) {
-                    System.out.println(dataSnapshot.getChildrenCount());
                     list.add(messageSnapshot.getValue(classType));
                 }
                 val.set(list);

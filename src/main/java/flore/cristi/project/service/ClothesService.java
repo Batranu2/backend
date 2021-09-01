@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -37,22 +38,27 @@ public class ClothesService {
         return repo.getEntityByUid(uid, database, ClothesEntity.class);
     }
 
-    public WeatherEntity getWeather(String city) throws InterruptedException {
+    public List<ClothesEntity> getWeather(String city) throws InterruptedException {
         RestTemplate restTemplate = new RestTemplate();
         Map<String, Object> weatherEntity = restTemplate.getForObject("https://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=metric&appid=" + apiKey, Map.class);
-       // String main = (String) ((Map<String, Object>) weatherEntity.get("weather")).get(1);
-        //String description = (String)((Map<String , Object>) weatherEntity.get("weather")).get("description");
-        Integer clouds = (Integer)((Map<Long , Object>) weatherEntity.get("clouds")).get("all");
-        Double temperature = (Double) ((Map<String, Object>) weatherEntity.get("main")).get("temp");
         Double feels_like = (Double) ((Map<String, Object>) weatherEntity.get("main")).get("feels_like");
         Random rand = new Random();
-        if(feels_like > 28) {
+        List<ClothesEntity> lista= new ArrayList<>();
+        if(feels_like > 17) {
             List<ClothesEntity> haina = getClothesByType(ClothesType.TRICOU);
-            if(!haina.isEmpty()){
+            List<ClothesEntity> haina1 = getClothesByType(ClothesType.PANTALONI_SCURTI);
+            List<ClothesEntity> haina2 = getClothesByType(ClothesType.ADIDASI);
+            if(!haina.isEmpty() || !haina1.isEmpty() || !haina2.isEmpty()){
                 int index = rand.nextInt(haina.size());
+                int index1 = rand.nextInt(haina1.size());
+                int index2 = rand.nextInt(haina2.size());
                 ClothesEntity clothesEntity = haina.get(index);
-                System.out.println(clothesEntity);
-                System.out.println("tricou");
+                ClothesEntity clothesEntity1 = haina1.get(index1);
+                ClothesEntity clothesEntity2 = haina2.get(index2);
+                lista.add(clothesEntity);
+                lista.add(clothesEntity1);
+                lista.add(clothesEntity2);
+                return lista;
             }
             else {
                 ResponseEntity.notFound();
@@ -60,17 +66,25 @@ public class ClothesService {
         }
         else {
             List<ClothesEntity> haina = getClothesByType(ClothesType.BLUZA);
+            List<ClothesEntity> haina1 = getClothesByType(ClothesType.PANTALONI_LUNGI);
+            List<ClothesEntity> haina2 = getClothesByType(ClothesType.ADIDASI);
             if(!haina.isEmpty()) {
                 int index = rand.nextInt(haina.size());
+                int index1 = rand.nextInt(haina1.size());
+                int index2 = rand.nextInt(haina2.size());
                 ClothesEntity clothesEntity = haina.get(index);
-                System.out.println(clothesEntity);
-                System.out.println("bluza");
+                ClothesEntity clothesEntity1 = haina1.get(index1);
+                ClothesEntity clothesEntity2 = haina2.get(index2);
+                lista.add(clothesEntity);
+                lista.add(clothesEntity1);
+                lista.add(clothesEntity2);
+                return lista;
             }
             else {
                 ResponseEntity.notFound();
             }
         }
-        return new WeatherEntity(null, null, clouds, temperature, feels_like);
+        return lista;
     }
 
     public List<ClothesEntity> getAllClothes() throws InterruptedException {
