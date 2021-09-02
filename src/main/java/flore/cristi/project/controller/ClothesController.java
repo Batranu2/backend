@@ -52,6 +52,12 @@ public class ClothesController {
         return clothesService.getAllClothes();
     }
 
+    @GetMapping("/clothes/{uid}/{city}")
+    @CrossOrigin
+    public String getHotOrCold(@PathVariable String uid, @PathVariable String city) throws InterruptedException {
+        return clothesService.getHotOrCold(uid,city);
+    }
+
     @DeleteMapping("/clothes/remove/{uid}")
     @CrossOrigin
     public void removeClothes(@PathVariable("uid") String uid) {

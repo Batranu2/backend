@@ -38,6 +38,73 @@ public class ClothesService {
         return repo.getEntityByUid(uid, database, ClothesEntity.class);
     }
 
+    public String getHotOrCold (String uid, String city) throws InterruptedException {
+        RestTemplate restTemplate = new RestTemplate();
+        ClothesEntity clothesEntity = getClothByUid(uid);
+        Map<String, Object> weatherEntity = restTemplate.getForObject("https://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=metric&appid=" + apiKey, Map.class);
+        Double feels_like = (Double) ((Map<String, Object>) weatherEntity.get("main")).get("feels_like");
+        if(clothesEntity.getTip_haina() == ClothesType.TRICOU && feels_like > 15) {
+            return "Acest " + clothesEntity.getTip_haina().toString().toLowerCase() + " este potrivit pentru temperatura mediului exterior!";
+        }
+        else if(clothesEntity.getTip_haina() == ClothesType.TRICOU && feels_like < 15)
+            return "Acest " + clothesEntity.getTip_haina().toString().toLowerCase() + " nu este potrivit pentru temperatura mediului exterior!";
+
+        if(clothesEntity.getTip_haina() == ClothesType.FUSTA && feels_like > 20) {
+            return "Această " + clothesEntity.getTip_haina().toString().toLowerCase() + " este potrivită pentru temperatura mediului exterior!";
+        }
+        else if(clothesEntity.getTip_haina() == ClothesType.FUSTA && feels_like < 20)
+            return "Această " + clothesEntity.getTip_haina().toString().toLowerCase() + " nu este potrivită pentru temperatura mediului exterior!";
+
+        if(clothesEntity.getTip_haina() == ClothesType.PANTALONI_LUNGI && feels_like > 20) {
+            return "Acești " + clothesEntity.getTip_haina().toString().toLowerCase() + " nu sunt potriviți pentru temperatura mediului exterior!";
+        }
+        else if(clothesEntity.getTip_haina() == ClothesType.PANTALONI_LUNGI && feels_like < 20)
+            return "Acești " + clothesEntity.getTip_haina().toString().toLowerCase() + " sunt potriviți pentru temperatura mediului exterior!";
+
+        if(clothesEntity.getTip_haina() == ClothesType.PANTALONI_SCURTI && feels_like > 20) {
+            return "Acești " + clothesEntity.getTip_haina().toString().toLowerCase() + " sunt potriviți pentru temperatura mediului exterior!";
+        }
+        else if(clothesEntity.getTip_haina() == ClothesType.PANTALONI_SCURTI && feels_like < 20)
+            return "Acești " + clothesEntity.getTip_haina().toString().toLowerCase() + " nu sunt potriviți pentru temperatura mediului exterior!";
+
+        if(clothesEntity.getTip_haina() == ClothesType.BLUZA && feels_like > 15) {
+            return "Această " + clothesEntity.getTip_haina().toString().toLowerCase() + " nu este potrivită pentru temperatura mediului exterior!";
+        }
+        else if(clothesEntity.getTip_haina() == ClothesType.BLUZA && feels_like < 15)
+            return "Această " + clothesEntity.getTip_haina().toString().toLowerCase() + " este potrivită pentru temperatura mediului exterior!";
+
+        if(clothesEntity.getTip_haina() == ClothesType.GEACA && feels_like > 15) {
+            return "Această " + clothesEntity.getTip_haina().toString().toLowerCase() + " nu este potrivită pentru temperatura mediului exterior!";
+        }
+        else if(clothesEntity.getTip_haina() == ClothesType.GEACA && feels_like < 15)
+            return "Această " + clothesEntity.getTip_haina().toString().toLowerCase() + " este potrivită pentru temperatura mediului exterior!";
+
+        if(clothesEntity.getTip_haina() == ClothesType.ADIDASI && feels_like > 7) {
+            return "Acești " + clothesEntity.getTip_haina().toString().toLowerCase() + " sunt potriviți pentru temperatura mediului exterior!";
+        }
+        else if(clothesEntity.getTip_haina() == ClothesType.ADIDASI && feels_like < 7)
+            return "Acești " + clothesEntity.getTip_haina().toString().toLowerCase() + " nu sunt potriviți pentru temperatura mediului exterior!";
+
+        if(clothesEntity.getTip_haina() == ClothesType.HANORAC && feels_like > 14) {
+            return "Acest " + clothesEntity.getTip_haina().toString().toLowerCase() + " nu este potrivit pentru temperatura mediului exterior!";
+        }
+        else if(clothesEntity.getTip_haina() == ClothesType.HANORAC && feels_like < 14)
+            return "Acest " + clothesEntity.getTip_haina().toString().toLowerCase() + " este potrivit pentru temperatura mediului exterior!";
+
+        if(clothesEntity.getTip_haina() == ClothesType.CARDIGAN && (feels_like > 18 || feels_like < 10)) {
+            return "Acest " + clothesEntity.getTip_haina().toString().toLowerCase() + " nu este potrivit pentru temperatura mediului exterior!";
+        }
+        else if(clothesEntity.getTip_haina() == ClothesType.CARDIGAN && feels_like < 18 && feels_like > 10)
+            return "Acest " + clothesEntity.getTip_haina().toString().toLowerCase() + " este potrivit pentru temperatura mediului exterior!";
+
+        if(clothesEntity.getTip_haina() == ClothesType.GHETE && feels_like > 5) {
+            return "Acest " + clothesEntity.getTip_haina().toString().toLowerCase() + " nu sunt potrivite pentru temperatura mediului exterior!";
+        }
+        else if(clothesEntity.getTip_haina() == ClothesType.GHETE && feels_like < 5)
+            return "Aceste " + clothesEntity.getTip_haina().toString().toLowerCase() + " sunt potrivite pentru temperatura mediului exterior!";
+        return "default";
+    }
+
     public List<ClothesEntity> getWeather(String city) throws InterruptedException {
         RestTemplate restTemplate = new RestTemplate();
         Map<String, Object> weatherEntity = restTemplate.getForObject("https://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=metric&appid=" + apiKey, Map.class);
