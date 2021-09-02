@@ -2,13 +2,11 @@ package flore.cristi.project.controller;
 
 import flore.cristi.project.model.entity.ClothesEntity;
 import flore.cristi.project.model.entity.ClothesType;
-import flore.cristi.project.model.entity.WeatherEntity;
+import flore.cristi.project.model.entity.Stats;
 import flore.cristi.project.service.ClothesService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -54,8 +52,8 @@ public class ClothesController {
 
     @GetMapping("/clothes/{uid}/{city}")
     @CrossOrigin
-    public String getHotOrCold(@PathVariable String uid, @PathVariable String city) throws InterruptedException {
-        return clothesService.getHotOrCold(uid,city);
+    public Stats getHotOrCold(@PathVariable String uid, @PathVariable String city) throws InterruptedException {
+        return clothesService.getHotOrCold(uid, city);
     }
 
     @DeleteMapping("/clothes/remove/{uid}")
