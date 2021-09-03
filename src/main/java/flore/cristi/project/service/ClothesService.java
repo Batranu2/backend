@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class ClothesService {
@@ -45,128 +46,117 @@ public class ClothesService {
         Double feels_like = (Double) ((Map<String, Object>) weatherEntity.get("main")).get("feels_like");
 
         if (clothesEntity.getTip_haina() == ClothesType.TRICOU && feels_like > 15) {
-            //"Acest " + clothesEntity.getTip_haina().toString().toLowerCase() + " este potrivit pentru temperatura mediului exterior!";
             return new Stats("GOOD");
         } else if (clothesEntity.getTip_haina() == ClothesType.TRICOU && feels_like < 15) {
-            //String mesaj1 = "Acest " + clothesEntity.getTip_haina().toString().toLowerCase() + " nu este potrivit pentru temperatura mediului exterior!";
             return new Stats("COLD");
         }
+
         if (clothesEntity.getTip_haina() == ClothesType.FUSTA && feels_like > 22) {
-            // "Această " + clothesEntity.getTip_haina().toString().toLowerCase() + " este potrivită pentru temperatura mediului exterior!";
             return new Stats("GOOD");
         } else if (clothesEntity.getTip_haina() == ClothesType.FUSTA && feels_like < 22)
-            // "Această " + clothesEntity.getTip_haina().toString().toLowerCase() + " nu este potrivită pentru temperatura mediului exterior!";
             return new Stats("COLD");
 
         if (clothesEntity.getTip_haina() == ClothesType.PANTALONI_LUNGI && feels_like > 20) {
-            // "Acești " + clothesEntity.getTip_haina().toString().toLowerCase() + " nu sunt potriviți pentru temperatura mediului exterior!";
             return new Stats("HOT");
         } else if (clothesEntity.getTip_haina() == ClothesType.PANTALONI_LUNGI && feels_like < 20)
-            // "Acești " + clothesEntity.getTip_haina().toString().toLowerCase() + " sunt potriviți pentru temperatura mediului exterior!";
             return new Stats("GOOD");
 
         if (clothesEntity.getTip_haina() == ClothesType.PANTALONI_SCURTI && feels_like > 20) {
-            // "Acești " + clothesEntity.getTip_haina().toString().toLowerCase() + " sunt potriviți pentru temperatura mediului exterior!";
             return new Stats("GOOD");
         } else if (clothesEntity.getTip_haina() == ClothesType.PANTALONI_SCURTI && feels_like < 20)
-            // "Acești " + clothesEntity.getTip_haina().toString().toLowerCase() + " nu sunt potriviți pentru temperatura mediului exterior!";
             return new Stats("COLD");
 
         if (clothesEntity.getTip_haina() == ClothesType.BLUZA && feels_like > 15) {
-            // "Această " + clothesEntity.getTip_haina().toString().toLowerCase() + " nu este potrivită pentru temperatura mediului exterior!";
             return new Stats("HOT");
         } else if (clothesEntity.getTip_haina() == ClothesType.BLUZA && feels_like < 15)
-            // "Această " + clothesEntity.getTip_haina().toString().toLowerCase() + " este potrivită pentru temperatura mediului exterior!";
             return new Stats("GOOD");
 
         if (clothesEntity.getTip_haina() == ClothesType.GEACA && feels_like > 15) {
-            //return "Această " + clothesEntity.getTip_haina().toString().toLowerCase() + " nu este potrivită pentru temperatura mediului exterior!";
             return new Stats("HOT");
         } else if (clothesEntity.getTip_haina() == ClothesType.GEACA && feels_like < 15)
-            //return "Această " + clothesEntity.getTip_haina().toString().toLowerCase() + " este potrivită pentru temperatura mediului exterior!";
             return new Stats("GOOD");
 
         if (clothesEntity.getTip_haina() == ClothesType.ADIDASI && feels_like > 7) {
-            //return "Acești " + clothesEntity.getTip_haina().toString().toLowerCase() + " sunt potriviți pentru temperatura mediului exterior!";
             return new Stats("GOOD");
         } else if (clothesEntity.getTip_haina() == ClothesType.ADIDASI && feels_like < 7)
-            //return "Acești " + clothesEntity.getTip_haina().toString().toLowerCase() + " nu sunt potriviți pentru temperatura mediului exterior!";
             return new Stats("COLD");
 
         if (clothesEntity.getTip_haina() == ClothesType.HANORAC && feels_like > 18) {
-            //return "Acest " + clothesEntity.getTip_haina().toString().toLowerCase() + " nu este potrivit pentru temperatura mediului exterior!";
             return new Stats("HOT");
         } else if (clothesEntity.getTip_haina() == ClothesType.HANORAC && feels_like < 18 && feels_like > 10)
-            //return "Acest " + clothesEntity.getTip_haina().toString().toLowerCase() + " este potrivit pentru temperatura mediului exterior!";
             return new Stats("GOOD");
 
         if (clothesEntity.getTip_haina() == ClothesType.HANORAC && feels_like < 10)
             return new Stats("COLD");
 
         if (clothesEntity.getTip_haina() == ClothesType.CARDIGAN && feels_like > 20) {
-            //return "Acest " + clothesEntity.getTip_haina().toString().toLowerCase() + " nu este potrivit pentru temperatura mediului exterior!";
             return new Stats("HOT");
         } else if (clothesEntity.getTip_haina() == ClothesType.CARDIGAN && feels_like < 20 && feels_like > 13)
-            //return "Acest " + clothesEntity.getTip_haina().toString().toLowerCase() + " este potrivit pentru temperatura mediului exterior!";
             return new Stats("GOOD");
 
         if (clothesEntity.getTip_haina() == ClothesType.CARDIGAN && feels_like < 13)
             return new Stats("COLD");
 
         if (clothesEntity.getTip_haina() == ClothesType.GHETE && feels_like > 5) {
-            //return "Acest " + clothesEntity.getTip_haina().toString().toLowerCase() + " nu sunt potrivite pentru temperatura mediului exterior!";
             return new Stats("HOT");
         } else if (clothesEntity.getTip_haina() == ClothesType.GHETE && feels_like < 5)
-            //return "Aceste " + clothesEntity.getTip_haina().toString().toLowerCase() + " sunt potrivite pentru temperatura mediului exterior!";
             return new Stats("GOOD");
 
         return new Stats("Default");
     }
 
-    public List<ClothesEntity> getWeather(String city) throws InterruptedException {
+    public ClothesEntity getRandomClothByType(ClothesType type, Random rand) {
+        List<ClothesEntity> haina = new ArrayList<>();
+        try {
+            haina = getClothesByType(type);
+        } catch (InterruptedException ignored) {
+            ignored.printStackTrace();
+        }
+
+        if (!haina.isEmpty()) {
+            return haina.get(rand.nextInt(haina.size()));
+        }
+        return null;
+    }
+
+    public ResponseEntity getClothesByWeather(String city) {
         RestTemplate restTemplate = new RestTemplate();
         Map<String, Object> weatherEntity = restTemplate.getForObject("https://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=metric&appid=" + apiKey, Map.class);
         Double feels_like = (Double) ((Map<String, Object>) weatherEntity.get("main")).get("feels_like");
         Random rand = new Random();
         List<ClothesEntity> lista = new ArrayList<>();
-        if (feels_like > 17) {
-            List<ClothesEntity> haina = getClothesByType(ClothesType.TRICOU);
-            List<ClothesEntity> haina1 = getClothesByType(ClothesType.PANTALONI_SCURTI);
-            List<ClothesEntity> haina2 = getClothesByType(ClothesType.ADIDASI);
-            if (!haina.isEmpty() || !haina1.isEmpty() || !haina2.isEmpty()) {
-                int index = rand.nextInt(haina.size());
-                int index1 = rand.nextInt(haina1.size());
-                int index2 = rand.nextInt(haina2.size());
-                ClothesEntity clothesEntity = haina.get(index);
-                ClothesEntity clothesEntity1 = haina1.get(index1);
-                ClothesEntity clothesEntity2 = haina2.get(index2);
-                lista.add(clothesEntity);
-                lista.add(clothesEntity1);
-                lista.add(clothesEntity2);
-                return lista;
-            } else {
-                ResponseEntity.notFound();
-            }
-        } else {
-            List<ClothesEntity> haina = getClothesByType(ClothesType.BLUZA);
-            List<ClothesEntity> haina1 = getClothesByType(ClothesType.PANTALONI_LUNGI);
-            List<ClothesEntity> haina2 = getClothesByType(ClothesType.ADIDASI);
-            if (!haina.isEmpty()) {
-                int index = rand.nextInt(haina.size());
-                int index1 = rand.nextInt(haina1.size());
-                int index2 = rand.nextInt(haina2.size());
-                ClothesEntity clothesEntity = haina.get(index);
-                ClothesEntity clothesEntity1 = haina1.get(index1);
-                ClothesEntity clothesEntity2 = haina2.get(index2);
-                lista.add(clothesEntity);
-                lista.add(clothesEntity1);
-                lista.add(clothesEntity2);
-                return lista;
-            } else {
-                ResponseEntity.notFound();
-            }
+
+        if (feels_like > 20) {
+            ClothesType[] types = {ClothesType.TRICOU, ClothesType.PANTALONI_SCURTI, ClothesType.ADIDASI};
+            lista = Stream.of(types).map((ClothesType type) -> getRandomClothByType(type, rand)).collect(Collectors.toList());
+
         }
-        return lista;
+
+        if (feels_like < 20 && feels_like > 15) {
+            ClothesType[] types = {ClothesType.TRICOU, ClothesType.CARDIGAN, ClothesType.PANTALONI_SCURTI, ClothesType.ADIDASI};
+            lista = Stream.of(types).map((ClothesType type) -> getRandomClothByType(type, rand)).collect(Collectors.toList());
+        }
+
+        if (feels_like < 15 && feels_like > 10) {
+            ClothesType[] types = {ClothesType.TRICOU, ClothesType.HANORAC, ClothesType.PANTALONI_LUNGI, ClothesType.ADIDASI};
+            lista = Stream.of(types).map((ClothesType type) -> getRandomClothByType(type, rand)).collect(Collectors.toList());
+        }
+
+        if (feels_like < 10 && feels_like > 7) {
+            ClothesType[] types = {ClothesType.TRICOU, ClothesType.GEACA, ClothesType.PANTALONI_LUNGI, ClothesType.ADIDASI};
+            lista = Stream.of(types).map((ClothesType type) -> getRandomClothByType(type, rand)).collect(Collectors.toList());
+        }
+
+        if (feels_like < 7) {
+            ClothesType[] types = {ClothesType.GEACA, ClothesType.BLUZA, ClothesType.PANTALONI_LUNGI, ClothesType.GHETE};
+            lista = Stream.of(types).map((ClothesType type) -> getRandomClothByType(type, rand)).collect(Collectors.toList());
+        }
+
+        if (lista.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(lista);
     }
 
     public List<ClothesEntity> getAllClothes() throws InterruptedException {

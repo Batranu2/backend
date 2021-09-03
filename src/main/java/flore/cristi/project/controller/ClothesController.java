@@ -22,8 +22,8 @@ public class ClothesController {
 
     @GetMapping("/weather/{city}")
     @CrossOrigin
-    public ResponseEntity getApi(@PathVariable("city") String city) throws InterruptedException {
-        return ResponseEntity.ok(clothesService.getWeather(city));
+    public ResponseEntity getApi(@PathVariable("city") String city) {
+        return clothesService.getClothesByWeather(city);
     }
 
     @PutMapping("/save-clothes")

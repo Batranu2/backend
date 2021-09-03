@@ -16,7 +16,9 @@ public class WeatherEntity {
         this.feels_like = feels_like;
     }
 
-    public WeatherEntity() {}
+    public WeatherEntity() {
+    }
+
     public String getMain() {
         return main;
     }

@@ -1,8 +1,5 @@
 package flore.cristi.project;
 
-import com.google.auth.oauth2.GoogleCredentials;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import gnu.io.CommPortIdentifier;
@@ -12,7 +9,10 @@ import gnu.io.SerialPortEventListener;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -22,9 +22,9 @@ import java.util.Set;
 
 @Component
 public class SerialRead implements SerialPortEventListener {
-    SerialPort serialPort;
-    private static final String PORT_NAMES[] = {"COM3"};
 
+    SerialPort serialPort;
+    private static final String[] PORT_NAMES = {"COM3"};
     private BufferedReader input;
     private OutputStream output;
     Set<String> colectie = new LinkedHashSet<>();
@@ -33,7 +33,7 @@ public class SerialRead implements SerialPortEventListener {
     private static final int DATA_RATE = 9600;
 
     @PostConstruct
-    public void initialize() throws IOException {
+    public void initialize() {
         CommPortIdentifier portId = null;
         Enumeration portEnum = CommPortIdentifier.getPortIdentifiers();
 
