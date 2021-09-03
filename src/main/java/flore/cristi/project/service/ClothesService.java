@@ -129,7 +129,6 @@ public class ClothesService {
         if (feels_like > 20) {
             ClothesType[] types = {ClothesType.TRICOU, ClothesType.PANTALONI_SCURTI, ClothesType.ADIDASI};
             lista = Stream.of(types).map((ClothesType type) -> getRandomClothByType(type, rand)).collect(Collectors.toList());
-
         }
 
         if (feels_like < 20 && feels_like > 15) {
@@ -148,7 +147,7 @@ public class ClothesService {
         }
 
         if (feels_like < 7) {
-            ClothesType[] types = {ClothesType.GEACA, ClothesType.BLUZA, ClothesType.PANTALONI_LUNGI, ClothesType.GHETE};
+            ClothesType[] types = {ClothesType.BLUZA, ClothesType.GEACA, ClothesType.PANTALONI_LUNGI, ClothesType.GHETE};
             lista = Stream.of(types).map((ClothesType type) -> getRandomClothByType(type, rand)).collect(Collectors.toList());
         }
 
