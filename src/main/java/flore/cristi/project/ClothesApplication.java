@@ -10,19 +10,17 @@ import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfigurat
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
-
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
 public class ClothesApplication {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         SpringApplication.run(ClothesApplication.class, args);
         SerialRead main = new SerialRead();
         main.initialize();
         Thread t = new Thread() {
             public void run() {
                 try {
-                    Thread.sleep(10000);
+                    Thread.sleep(1000000);
                 } catch (InterruptedException ie) {
                 }
             }
